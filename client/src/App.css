@@ -27,3 +27,7 @@ input {
   margin-bottom: 12px;
 }
 .form-group{ margin: 5px 10px;}
+form {text-align: left;}
+label {font-weight: 700; color: #2196f3;}
+h1 {color: #2196f3;}
+h2 {color: #0e45ac;}
