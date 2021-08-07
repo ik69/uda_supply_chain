@@ -6,6 +6,11 @@ import "./App.css";
 
 class App extends Component {
   state = { storageValue: 0, web3: null, accounts: null, contract: null };
+  actors = { owner:"0x42aba8BB5307Cefd7De7ad3050286838B4D9fAE3",
+            farmer:"0xbD460DAF090f35FDB28b673cE3101FF17e2351B4",
+            distributor:"0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817",
+            retailer:"0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7",
+            consumer:"0xa8B0b61134B24D9766053dd13Fd34016BA697CD6"}
 
   componentDidMount = async () => {
     try {
@@ -58,8 +63,17 @@ class App extends Component {
           <h1>Fair Trade Coffee</h1>
           <p>Prove the authenticity of coffee using the Ethereum blockchain.</p>
         </div>
+       
         <div className="container">
           <div id="ftc-harvest">
+          <div>
+            <p>{this.actors.owner} 94.01 ETH 0</p>
+          <p>0x42aba8BB5307Cefd7De7ad3050286838B4D9fAE3 94.01 ETH 0</p>
+          <p>0xbD460DAF090f35FDB28b673cE3101FF17e2351B4 70.84 ETH 1</p>
+          <p>0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817 99.69 ETH 2</p>
+          <p>0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7 100.00 ETH 3</p>
+          <p>0xa8B0b61134B24D9766053dd13Fd34016BA697CD6 100.00 ETH 4</p>
+        </div>
             <div className="form-group">
               <h2>Product Overview</h2>
               <form onSubmit={this.handleSubmit}>
