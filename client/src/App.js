@@ -16,15 +16,32 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {  web3: null, accounts: null, contract: null,
-                    originFarmerID:null,
-                    originFarmName:null,
-                    originFarmInformation:null,
-                    originFarmLatitude:null,
-                    originFarmLongitude:null};
-
+                    sku: "",
+                    upc: null,
+                    productID:null,
+                    ownerID: "",
+                    originFarmerID: "",
+                    originFarmName: "",
+                    originFarmInformation: "",
+                    originFarmLatitude: "",
+                    originFarmLongitude: "",
+                    productNotes: "",
+                    productPrice: "",
+                    itemState: "",
+                    distributorID: "",
+                    retailerID: "",
+                    consumerID: "",
+                    msg:"uzenet"
+                  };
 
     this.onInputchange = this.onInputchange.bind(this);
     this.harvest = this.harvest.bind(this);
+    this.process = this.process.bind(this);
+    this.pack = this.pack.bind(this);
+    this.sell = this.sell.bind(this);
+    this.register = this.register.bind(this);
+    this.fetch1 = this.fetch1.bind(this);
+    this.fetch2 = this.fetch2.bind(this);
   }
 
   componentDidMount = async () => {
@@ -51,18 +68,89 @@ class App extends Component {
     }
   };
 
+
+  register = async () => {
+    const { accounts, contract,originFarmerID,originFarmName, originFarmInformation, 
+      originFarmLatitude,originFarmLongitude,productNotes,distributorID,retailerID,consumerID } = this.state;
+    
+      console.log(originFarmerID,originFarmName, originFarmInformation, 
+      originFarmLatitude,originFarmLongitude,productNotes,distributorID,retailerID,consumerID)
+    let bb = await contract.methods.register(
+      originFarmerID,
+      originFarmName, 
+      originFarmInformation,
+      originFarmLatitude,
+      originFarmLongitude,
+      productNotes,
+      distributorID,
+      retailerID,
+      consumerID ).send({from: accounts[0]});
+    console.log(bb);
+  }
+
+  fetch1 = async () => {
+    const { accounts, contract, upc} = this.state;
+    console.log(upc)
+    if(!upc) {this.setState({msg: "UPC1 is  null"}); return;}
+   let response =  await contract.methods.fetchItemBufferOne(upc).call();
+   console.log(response);
+   this.setState({ 
+    sku:response.itemSKU,
+    upc:response.itemUPC,
+    productID: null,
+    ownerID: response.ownerID,
+    originFarmerID: response.originFarmerID,
+    originFarmName: response.originFarmName,
+    originFarmInformation: response.originFarmInformation,
+    originFarmLatitude: response.originFarmLatitude,
+    originFarmLongitude: response.originFarmLongitude,
+    })
+  }
+
+  fetch2 = async () => {
+    const { accounts, contract, upc} = this.state;
+    if(!upc) {this.setState({msg: "UPC2 is  null"}); return;}
+   let response =  await contract.methods.fetchItemBufferTwo(upc).call();
+   console.log(response)
+   this.setState({ 
+    productID:response.productID,
+    productNotes: response.productNotes,
+    productPrice: response.productPrice,
+    itemState: response.itemState,
+    distributorID: response.distributorID,
+    retailerID: response.retailerID,
+    consumerID: response[8] 
+    })
+  }
+
   onInputchange(event) {
-    console.log(event.target.value)
-    console.log(event.target.name)
     this.setState({
       [event.target.name]: event.target.value
     });
   }
 
   harvest = async () => {
-    const { accounts, contract } = this.state;
+    const { accounts, contract, upc } = this.state;
+    let response =  await contract.methods.harvestItem(upc).send({from: accounts[0]});
+    console.log(response)
+  }
 
-    console.log(this.state)
+  process = async () => {
+    const { accounts, contract, upc } = this.state;
+    let response =  await contract.methods.processItem(upc).send({from: accounts[0]});
+    console.log(response)
+  }
+  pack = async () => {
+    const { accounts, contract, upc } = this.state;
+    let response =  await contract.methods.packItem(upc).send({from: accounts[0]});
+    console.log(response)
+  }
+  sell = async () => {
+    const { accounts, contract, upc, productPrice } = this.state;
+    if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
+    console.log(productPrice)
+    let response =  await contract.methods.sellItem(upc, parseInt(productPrice)).send({from: accounts[0]});
+    console.log(response)
   }
 
 /*  ********************** runExample = async () => {
@@ -87,29 +175,62 @@ class App extends Component {
         <div>
           <h1>Fair Trade Coffee</h1>
           <p>Prove the authenticity of coffee using the Ethereum blockchain.</p>
+          <div className="columnDiv">
+            <div style={{textAlign: "center", fontSize: "25px",color: "blue", width: "30%"}}>{this.state.msg}</div>
+            <div>
+            {this.actors.owner} (0)   || 0xbD460DAF090f35FDB28b673cE3101FF17e2351B4 (1) || 0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817 (2) || 
+          0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7 (3) || 0xa8B0b61134B24D9766053dd13Fd34016BA697CD6 (4)
+            </div>
+          </div>
         </div>
-       
         <div className="container">
           <div id="ftc-harvest">
-          <div>
-            <p>{this.actors.owner} 94.01 ETH 0</p>
-          <p>0xbD460DAF090f35FDB28b673cE3101FF17e2351B4 70.84 ETH 1</p>
-          <p>0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817 99.69 ETH 2</p>
-          <p>0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7 100.00 ETH 3</p>
-          <p>0xa8B0b61134B24D9766053dd13Fd34016BA697CD6 100.00 ETH 4</p>
+          <div className="form-group">
+            {/*  <p>{this.actors.owner} 94.01 ETH 0</p>  <p>0xbD460DAF090f35FDB28b673cE3101FF17e2351B4 70.84 ETH 1</p>   <p>0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817 99.69 ETH 2</p>
+          <p>0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7 100.00 ETH 3</p> <p>0xa8B0b61134B24D9766053dd13Fd34016BA697CD6 100.00 ETH 4</p> */}
+            <h2>Farm Register</h2>
+              <form>
+                <label htmlFor="originFarmerID">Farmer ID:</label>
+                <input  type="text" id="originFarmerID" name="originFarmerID" size="50" onChange={this.onInputchange}/>
+                <label htmlFor="originFarmName">Farm Name: </label>
+                <input value="Niki" type="text" style={{display: "inline"}} id="originFarmName" name="originFarmName" onChange={this.onInputchange}/><br />
+                <label htmlFor="originFarmInformation">Farm Information: </label>
+                <input value="Info" style={{display: "inline"}} type="text" id="originFarmInformation" name="originFarmInformation" onChange={this.onInputchange}/><br />
+                <label htmlFor="originFarmLatitude">Farm Latitude: </label>
+                <input value="100" style={{display: "inline"}} type="text" id="originFarmLatitude" name="originFarmLatitude" onChange={this.onInputchange}/><br />
+                <label htmlFor="originFarmLongitude">Farm Longitude: </label>
+                <input value="200" style={{display: "inline"}} type="text" id="originFarmLongitude" name="originFarmLongitude" onChange={this.onInputchange}/><br />
+                <label htmlFor="productNotes">Product Notes: </label>
+                <input value="Notes" style={{display: "inline"}} type="text" id="productNotes" name="productNotes" onChange={this.onInputchange}/><br />
+                <label htmlFor="productPrice">Product Price: </label>
+                <input style={{display: "inline"}} type="text" id="productPrice" name="productPrice" onChange={this.onInputchange} /><br />
+                <label htmlFor="itemState">Product State: </label>
+                <input value="State" style={{display: "inline"}} type="text" id="itemState" name="itemState" onChange={this.onInputchange} disabled/><br />
+                <label htmlFor="distributorID">DistributorID: </label>
+                <input  type="text" id="distributorID" name="distributorID" onChange={this.onInputchange}/>
+                <label htmlFor="retailerID">RetailerID:</label>
+                <input  type="text" id="retailerID" name="retailerID" onChange={this.onInputchange}/>
+                <label htmlFor="consumerID">Consumer ID:</label>
+                <input  type="text" id="consumerID" name="consumerID" onChange={this.onInputchange}/>
+                <button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.register}>Register</button>
+              </form>
         </div>
             <div className="form-group">
               <h2>Product Overview</h2>
-              <form onSubmit={this.handleSubmit}>
-                <label htmlFor="sku">SKU:</label>
-                <input className="input-field" type="number" id="sku" size="8" name="sku" onChange={this.onInputchange} required />
-                <label htmlFor="upc">UPC:</label>
+              <form>
+              <label htmlFor="upc">UPC:</label>
                 <input className="input-field" type="number" id="upc" size="8" name="upc" onChange={this.onInputchange} required />
-                <label htmlFor="oid">Current Owner ID:</label>
-                <input className="input-field" type="text" id="ownerID" name="ownerID" size="50" onChange={this.onInputchange} required />
+
+                <label htmlFor="sku">SKU:</label>
+                <input className="input-field" type="number" id="sku" size="8" name="sku" value={this.state.sku} readOnly />
+               
+                <label htmlFor="ownerID">Current Owner ID:</label>
+                <input className="input-field" type="text" id="ownerID" name="ownerID" size="50" value={this.state.ownerID} readOnly/>
+
+
                 <div className="button-div">
-                  <button className="btn-fetchOne" id="button" type="button" data-id="9">Fetch Data 1</button>
-                  <button className="btn-fetchTwo" id="button" type="button" data-id="10">Fetch Data 2</button>
+                  <button className="btn-fetchOne" id="btnfetch1" type="button" data-id="9" onClick={this.fetch1}>Fetch Data 1</button>
+                  <button className="btn-fetchTwo" id="btnfetch2" type="button" data-id="10" onClick={this.fetch2}>Fetch Data 2</button>
                 </div>
               </form>
             </div>
@@ -117,34 +238,37 @@ class App extends Component {
               <h2>Farm Details</h2>
               <form>
                 <label htmlFor="originFarmerID">Farmer ID:</label>
-                <input type="text" id="originFarmerID" name="originFarmerID" size="50" onChange={this.onInputchange}/>
+                <input type="text" id="originFarmerID" value={this.state.originFarmerID} readOnly name="originFarmerID" size="50" />
                 <label htmlFor="originFarmerID">Farm Name:</label>
-                <input type="text" id="originFarmName" name="originFarmName" onChange={this.onInputchange}/>
+                <input type="text" id="originFarmName" name="originFarmName" readOnly value={this.state.originFarmName} />
                 <label htmlFor="originFarmerID">Farm Information:</label>
-                <input type="text" id="originFarmInformation" name="originFarmInformation" onChange={this.onInputchange}/>
+                <input type="text" id="originFarmInformation" name="originFarmInformation" readOnly value={this.state.originFarmInformation}/>
                 <label htmlFor="originFarmerID">Farm Latitude:</label>
-                <input type="text" id="originFarmLatitude" name="originFarmLatitude" onChange={this.onInputchange}/>
+                <input type="text" id="originFarmLatitude" name="originFarmLatitude" readOnly value={this.state.originFarmLatitude}/>
                 <label htmlFor="originFarmLongitude">Farm Longitude:</label>
-                <input type="text" id="originFarmLongitude" name="originFarmLongitude" onChange={this.onInputchange}/><br />
+                <input type="text" id="originFarmLongitude" name="originFarmLongitude" readOnly value={this.state.originFarmLongitude}/><br />
+                <label htmlFor="productPriceInput">Product Price:</label>
+                <input type="text" id="productPriceInput" name="productPrice" onChange={this.onInputchange}/><br />
                 <button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.harvest}>Harvest</button>
                 <button className="btn-process" id="button" type="button" data-id="2" onClick={this.process}>Process</button>
                 <button className="btn-pack" id="button" type="button" data-id="3" onClick={this.pack}>Pack</button>
-                <button className="btn-forsale" id="button" type="button" data-id="4" onClick={this.sale}>ForSale</button>
+                <button className="btn-forsale" id="button" type="button" data-id="4" onClick={this.sell}>ForSale</button>
               </form>
             </div>
+            {/* ************************************************************************************/}
             <div className="form-group">
               <h2>Product Details</h2>
               <form>
                 <label htmlFor="productNotes">Product Notes:</label>
-                <input type="text" id="productNotes" name="productNotes" size="60" />
+                <input type="text" value={this.state.productNotes} readOnly id="productNotes" name="productNotes" size="60" />
                 <label htmlFor="productPrice">Product Price:  ETH</label>
-                <input type="number" id="productPrice" name="productPrice" />
+                <input type="number" value={this.state.productPrice} readOnly id="productPrice" name="productPrice" />
                 <label htmlFor="distributorID"> Distributor ID:</label>
-                <input type="text" id="distributorID" name="distributorID" />
+                <input type="text" value={this.state.distributorID} readOnly id="distributorID" name="distributorID" />
                 <label htmlFor="retailerID"> Retailer ID:</label>
-                <input type="text" id="retailerID" name="retailerID" size="50" />
-                <label htmlFor="consumerID"> Distributor ID:</label>
-                <input type="text" id="consumerID" name="consumerID" size="50" />
+                <input type="text" value={this.state.retailerID} readOnly id="retailerID" name="retailerID" size="50" />
+                <label htmlFor="consumerIDDet"> Consumer ID:</label>
+                <input type="text" value={this.state.consumerID} readOnly id="consumerIDDet" name="consumerIDDet" size="50" />
                 <br />
                 <button className="btn-buy" id="button" type="button" data-id="5">Buy</button>
                 <button className="btn-ship" id="button" type="button" data-id="6">Ship</button>
@@ -153,7 +277,9 @@ class App extends Component {
               </form>
             </div>
           </div>
-          <div>
+        
+        {/*  
+        <div>
             <h2>Transaction History<span id="ftc-history"></span></h2>
             <ul id="ftc-events">
               <li>"kkkkk</li>
@@ -163,6 +289,7 @@ class App extends Component {
             <br></br>
             <hr></hr>
           </div>
+        */}  
         </div>
 
       </div>
