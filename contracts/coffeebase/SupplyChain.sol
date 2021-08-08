@@ -1,7 +1,13 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.8.6;
+
 // Define a contract 'Supplychain'
-contract SupplyChain {
+import "./../coffeeaccesscontrol/ConsumerRole.sol";
+import "./../coffeeaccesscontrol/DistributorRole.sol";
+import "./../coffeeaccesscontrol/FarmerRole.sol";
+import "./../coffeeaccesscontrol/RetailerRole.sol";
+
+contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole {
 
   // Define 'owner'
   address owner;
@@ -158,10 +164,31 @@ contract SupplyChain {
                             string memory _originFarmLongitude, string memory _productNotes) public 
   {
     // Add the new item as part of Harvest
+    /*----------*/
+    Item memory item = Item({
+        sku: sku,
+        upc: _upc,
+        ownerID: _originFarmerID,
+        originFarmerID: _originFarmerID,
+        originFarmName: _originFarmName,
+        originFarmInformation: _originFarmInformation,
+        originFarmLatitude: _originFarmLatitude,
+        originFarmLongitude: _originFarmLongitude,
+        productID: sku+_upc,
+        productNotes: _productNotes,
+        productPrice: 0,
+        itemState: defaultState,
+        distributorID: address(0),
+        retailerID: address(0),
+        consumerID: address(0)
+    });
+    items[_upc] = item;
     
     // Increment sku
     sku = sku + 1;
     // Emit the appropriate event
+    /*------*/
+     emit Harvested(_upc);
     
   }
 
@@ -266,31 +293,38 @@ contract SupplyChain {
 
   // Define a function 'fetchItemBufferOne' that fetches the data
   function fetchItemBufferOne(uint _upc) public view returns 
-  (
-  uint    itemSKU,
-  uint    itemUPC,
-  address ownerID,
-  address originFarmerID,
-  string  memory originFarmName,
-  string  memory originFarmInformation,
-  string  memory originFarmLatitude,
-  string  memory originFarmLongitude
-  ) 
+    (
+    uint    itemSKU,
+    uint    itemUPC,
+    address ownerID,
+    address originFarmerID,
+    string  memory originFarmName,
+    string  memory originFarmInformation,
+    string  memory originFarmLatitude,
+    string  memory originFarmLongitude
+    ) 
   {
   // Assign values to the 8 parameters
-  
+    itemSKU =1;
+      itemUPC =1;
+      ownerID  = msg.sender;
+      originFarmerID = address(0xf17f52151EbEF6C7334FAD080c5704D77216b732);
+      originFarmName = "yyyyyy";
+      originFarmInformation = "ppp";
+      originFarmLatitude = "ooo";
+      originFarmLongitude = "hhhhhh";
     
-  return 
-  (
-  itemSKU,
-  itemUPC,
-  ownerID,
-  originFarmerID,
-  originFarmName,
-  originFarmInformation,
-  originFarmLatitude,
-  originFarmLongitude
-  );
+    return 
+      (
+      itemSKU,
+      itemUPC,
+      ownerID,
+      originFarmerID,
+      originFarmName,
+      originFarmInformation,
+      originFarmLatitude,
+      originFarmLongitude
+      );
   }
 
   // Define a function 'fetchItemBufferTwo' that fetches the data

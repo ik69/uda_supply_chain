@@ -1,36 +1,47 @@
 import React, { Component } from "react";
 import SimpleStorageContract from "./contracts/SimpleStorage.json";
+import SupplyChainContract from "./contracts/SupplyChain.json";
 import getWeb3 from "./getWeb3";
 
 import "./App.css";
 
 class App extends Component {
-  state = { storageValue: 0, web3: null, accounts: null, contract: null };
+ 
   actors = { owner:"0x42aba8BB5307Cefd7De7ad3050286838B4D9fAE3",
             farmer:"0xbD460DAF090f35FDB28b673cE3101FF17e2351B4",
             distributor:"0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817",
             retailer:"0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7",
             consumer:"0xa8B0b61134B24D9766053dd13Fd34016BA697CD6"}
 
+  constructor(props) {
+    super(props);
+    this.state = {  web3: null, accounts: null, contract: null,
+                    originFarmerID:null,
+                    originFarmName:null,
+                    originFarmInformation:null,
+                    originFarmLatitude:null,
+                    originFarmLongitude:null};
+
+
+    this.onInputchange = this.onInputchange.bind(this);
+    this.harvest = this.harvest.bind(this);
+  }
+
   componentDidMount = async () => {
     try {
       // Get network provider and web3 instance.
       const web3 = await getWeb3();
-
       // Use web3 to get the user's accounts.
       const accounts = await web3.eth.getAccounts();
-
       // Get the contract instance.
       const networkId = await web3.eth.net.getId();
-      const deployedNetwork = SimpleStorageContract.networks[networkId];
-      const instance = new web3.eth.Contract(
-        SimpleStorageContract.abi,
-        deployedNetwork && deployedNetwork.address,
-      );
-
-      // Set web3, accounts, and contract to the state, and then proceed with an
-      // example of interacting with the contract's methods.
-      this.setState({ web3, accounts, contract: instance }, this.runExample);
+      //const deployedNetwork = SimpleStorageContract.networks[networkId];
+      const deployedNetwork = SupplyChainContract.networks[networkId];
+      const instance = new web3.eth.Contract( SupplyChainContract.abi, deployedNetwork && deployedNetwork.address, );
+      // const instance = new web3.eth.Contract( SimpleStorageContract.abi, deployedNetwork && deployedNetwork.address, );
+      // Set web3, accounts, and contract to the state, and then proceed with an example of interacting with the contract's methods.
+      // **************   this.setState({ web3, accounts, contract: instance }, this.runExample);
+      this.setState({ web3, accounts, contract: instance });
     } catch (error) {
       // Catch any errors for any of the above operations.
       alert(
@@ -40,7 +51,21 @@ class App extends Component {
     }
   };
 
-  runExample = async () => {
+  onInputchange(event) {
+    console.log(event.target.value)
+    console.log(event.target.name)
+    this.setState({
+      [event.target.name]: event.target.value
+    });
+  }
+
+  harvest = async () => {
+    const { accounts, contract } = this.state;
+
+    console.log(this.state)
+  }
+
+/*  ********************** runExample = async () => {
     const { accounts, contract } = this.state;
 
     // Stores a given value, 5 by default.
@@ -51,7 +76,7 @@ class App extends Component {
 
     // Update state with the result.
     this.setState({ storageValue: response });
-  };
+  };*/
 
   render() {
     if (!this.state.web3) {
@@ -68,7 +93,6 @@ class App extends Component {
           <div id="ftc-harvest">
           <div>
             <p>{this.actors.owner} 94.01 ETH 0</p>
-          <p>0x42aba8BB5307Cefd7De7ad3050286838B4D9fAE3 94.01 ETH 0</p>
           <p>0xbD460DAF090f35FDB28b673cE3101FF17e2351B4 70.84 ETH 1</p>
           <p>0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817 99.69 ETH 2</p>
           <p>0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7 100.00 ETH 3</p>
@@ -78,11 +102,11 @@ class App extends Component {
               <h2>Product Overview</h2>
               <form onSubmit={this.handleSubmit}>
                 <label htmlFor="sku">SKU:</label>
-                <input className="input-field" type="number" id="sku" size="8" name="sku" required />
+                <input className="input-field" type="number" id="sku" size="8" name="sku" onChange={this.onInputchange} required />
                 <label htmlFor="upc">UPC:</label>
-                <input className="input-field" type="number" id="upc" size="8" name="upc" required />
+                <input className="input-field" type="number" id="upc" size="8" name="upc" onChange={this.onInputchange} required />
                 <label htmlFor="oid">Current Owner ID:</label>
-                <input className="input-field" type="text" id="ownerID" name="ownerID" size="50" required />
+                <input className="input-field" type="text" id="ownerID" name="ownerID" size="50" onChange={this.onInputchange} required />
                 <div className="button-div">
                   <button className="btn-fetchOne" id="button" type="button" data-id="9">Fetch Data 1</button>
                   <button className="btn-fetchTwo" id="button" type="button" data-id="10">Fetch Data 2</button>
@@ -93,19 +117,19 @@ class App extends Component {
               <h2>Farm Details</h2>
               <form>
                 <label htmlFor="originFarmerID">Farmer ID:</label>
-                <input type="text" id="originFarmerID" name="originFarmerID" size="50" />
+                <input type="text" id="originFarmerID" name="originFarmerID" size="50" onChange={this.onInputchange}/>
                 <label htmlFor="originFarmerID">Farm Name:</label>
-                <input type="text" id="originFarmName" name="originFarmName" />
+                <input type="text" id="originFarmName" name="originFarmName" onChange={this.onInputchange}/>
                 <label htmlFor="originFarmerID">Farm Information:</label>
-                <input type="text" id="originFarmInformation" name="originFarmInformation" />
+                <input type="text" id="originFarmInformation" name="originFarmInformation" onChange={this.onInputchange}/>
                 <label htmlFor="originFarmerID">Farm Latitude:</label>
-                <input type="text" id="originFarmLatitude" name="originFarmLatitude" />
+                <input type="text" id="originFarmLatitude" name="originFarmLatitude" onChange={this.onInputchange}/>
                 <label htmlFor="originFarmLongitude">Farm Longitude:</label>
-                <input type="text" id="originFarmLongitude" name="originFarmLongitude" /><br />
-                <button className="btn-harvest" id="button" type="button" data-id="1">Harvest</button>
-                <button className="btn-process" id="button" type="button" data-id="2">Process</button>
-                <button className="btn-pack" id="button" type="button" data-id="3">Pack</button>
-                <button className="btn-forsale" id="button" type="button" data-id="4">ForSale</button>
+                <input type="text" id="originFarmLongitude" name="originFarmLongitude" onChange={this.onInputchange}/><br />
+                <button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.harvest}>Harvest</button>
+                <button className="btn-process" id="button" type="button" data-id="2" onClick={this.process}>Process</button>
+                <button className="btn-pack" id="button" type="button" data-id="3" onClick={this.pack}>Pack</button>
+                <button className="btn-forsale" id="button" type="button" data-id="4" onClick={this.sale}>ForSale</button>
               </form>
             </div>
             <div className="form-group">
