@@ -203,7 +203,7 @@ class App extends Component {
                 <label htmlFor="productNotes">Product Notes: </label>
                 <input value="Notes" style={{display: "inline"}} type="text" id="productNotes" name="productNotes" onChange={this.onInputchange}/><br />
                 <label htmlFor="productPrice">Product Price: </label>
-                <input style={{display: "inline"}} type="text" id="productPrice" name="productPrice" onChange={this.onInputchange} /><br />
+                <input style={{display: "inline"}} type="number" id="productPrice" name="productPrice" onChange={this.onInputchange} /><br />
                 <label htmlFor="itemState">Product State: </label>
                 <input value="State" style={{display: "inline"}} type="text" id="itemState" name="itemState" onChange={this.onInputchange} disabled/><br />
                 <label htmlFor="distributorID">DistributorID: </label>
@@ -212,7 +212,7 @@ class App extends Component {
                 <input  type="text" id="retailerID" name="retailerID" onChange={this.onInputchange}/>
                 <label htmlFor="consumerID">Consumer ID:</label>
                 <input  type="text" id="consumerID" name="consumerID" onChange={this.onInputchange}/>
-                <button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.register}>Register</button>
+                <button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.register}>Register & Harvest</button>
               </form>
         </div>
             <div className="form-group">
@@ -220,61 +220,56 @@ class App extends Component {
               <form>
               <label htmlFor="upc">UPC:</label>
                 <input className="input-field" type="number" id="upc" size="8" name="upc" onChange={this.onInputchange} required />
-
-                <label htmlFor="sku">SKU:</label>
-                <input className="input-field" type="number" id="sku" size="8" name="sku" value={this.state.sku} readOnly />
-               
-                <label htmlFor="ownerID">Current Owner ID:</label>
-                <input className="input-field" type="text" id="ownerID" name="ownerID" size="50" value={this.state.ownerID} readOnly/>
-
-
                 <div className="button-div">
                   <button className="btn-fetchOne" id="btnfetch1" type="button" data-id="9" onClick={this.fetch1}>Fetch Data 1</button>
                   <button className="btn-fetchTwo" id="btnfetch2" type="button" data-id="10" onClick={this.fetch2}>Fetch Data 2</button>
                 </div>
-              </form>
+                
+                <p> <span>SKU:</span> {this.state.sku}</p>
+                <p><span>Current Owner ID:</span> {this.state.ownerID}</p>
+                <p><span>Distributor ID:</span> {this.state.distributorID}</p>
+                <p><span>Retailer ID:</span> {this.state.retailerID}</p>
+                <p><span>Consumer ID:</span> {this.state.consumerID}</p>
+                </form>
             </div>
             <div className="form-group">
-              <h2>Farm Details</h2>
+              <h2>Farm Details & Product Details</h2>
               <form>
-                <label htmlFor="originFarmerID">Farmer ID:</label>
-                <input type="text" id="originFarmerID" value={this.state.originFarmerID} readOnly name="originFarmerID" size="50" />
-                <label htmlFor="originFarmerID">Farm Name:</label>
-                <input type="text" id="originFarmName" name="originFarmName" readOnly value={this.state.originFarmName} />
-                <label htmlFor="originFarmerID">Farm Information:</label>
-                <input type="text" id="originFarmInformation" name="originFarmInformation" readOnly value={this.state.originFarmInformation}/>
-                <label htmlFor="originFarmerID">Farm Latitude:</label>
-                <input type="text" id="originFarmLatitude" name="originFarmLatitude" readOnly value={this.state.originFarmLatitude}/>
-                <label htmlFor="originFarmLongitude">Farm Longitude:</label>
-                <input type="text" id="originFarmLongitude" name="originFarmLongitude" readOnly value={this.state.originFarmLongitude}/><br />
-                <label htmlFor="productPriceInput">Product Price:</label>
-                <input type="text" id="productPriceInput" name="productPrice" onChange={this.onInputchange}/><br />
-                <button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.harvest}>Harvest</button>
+                <p><span>Farmer ID:</span> {this.state.originFarmerID}</p>
+                <p><span>Farm Name:</span> {this.state.originFarmName}</p>
+                <p><span>Farm Information:</span> {this.state.originFarmInformation}</p>
+                <p><span>Farm Latitude:</span> {this.state.originFarmLatitude}</p>
+                <p><span>Farm Longitude:</span> {this.state.originFarmLongitude}</p>
+                <p><span>Product Notes:</span> {this.state.productNotes}</p>
+                 {/*<button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.harvest}>Harvest</button> */}
                 <button className="btn-process" id="button" type="button" data-id="2" onClick={this.process}>Process</button>
                 <button className="btn-pack" id="button" type="button" data-id="3" onClick={this.pack}>Pack</button>
-                <button className="btn-forsale" id="button" type="button" data-id="4" onClick={this.sell}>ForSale</button>
+                <p>
+                  {/*<span>Product Price:</span> {this.state.productPrice}*/}
+                  <label htmlFor="productPrice">Product Price: </label>
+                  <input style={{display: "inline", marginRight: "10px"}} type="number" id="productPrice" name="productPrice" onChange={this.onInputchange} />
+                  <button className="btn-forsale" id="button" type="button" data-id="4" onClick={this.sell}>ForSale</button>
+                </p>
+                
               </form>
             </div>
             {/* ************************************************************************************/}
-            <div className="form-group">
-              <h2>Product Details</h2>
-              <form>
-                <label htmlFor="productNotes">Product Notes:</label>
-                <input type="text" value={this.state.productNotes} readOnly id="productNotes" name="productNotes" size="60" />
-                <label htmlFor="productPrice">Product Price:  ETH</label>
-                <input type="number" value={this.state.productPrice} readOnly id="productPrice" name="productPrice" />
-                <label htmlFor="distributorID"> Distributor ID:</label>
-                <input type="text" value={this.state.distributorID} readOnly id="distributorID" name="distributorID" />
-                <label htmlFor="retailerID"> Retailer ID:</label>
-                <input type="text" value={this.state.retailerID} readOnly id="retailerID" name="retailerID" size="50" />
-                <label htmlFor="consumerIDDet"> Consumer ID:</label>
-                <input type="text" value={this.state.consumerID} readOnly id="consumerIDDet" name="consumerIDDet" size="50" />
-                <br />
-                <button className="btn-buy" id="button" type="button" data-id="5">Buy</button>
-                <button className="btn-ship" id="button" type="button" data-id="6">Ship</button>
+            <div className="form-group1">
+              <div>
+                <h2>Distributor</h2>
+                  <button className="btn-buy" id="button" type="button" data-id="5">Buy</button>
+                  <button className="btn-ship" id="button" type="button" data-id="6">Ship</button>
+              </div>
+              <div>
+                <h2>Retailer</h2>
                 <button className="btn-receive" id="button" type="button" data-id="7">Receive</button>
+              </div>
+              <div>
+                <h2>Cosumer</h2>
                 <button className="btn-purchase" id="button" type="button" data-id="8">Purchase</button>
-              </form>
+              </div>
+                
+               
             </div>
           </div>
         

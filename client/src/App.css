@@ -28,8 +28,11 @@ input {
   display: block;
   margin-bottom: 12px;
 }
-.form-group{ margin: 5px 10px;}
+p >span {font-weight: 700; color: #2196f3;}
+.form-group{ margin: 5px 10px;flex: 1 0 auto}
+.form-group1{ margin: 5px 10px;flex: 0 1 250px}
 form {text-align: left;}
 label {font-weight: 700; color: #2196f3;}
 h1 {color: #2196f3;}
 h2 {color: #0e45ac;}
+button {margin-right: 8px;}
