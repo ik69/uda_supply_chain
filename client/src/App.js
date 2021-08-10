@@ -39,6 +39,10 @@ class App extends Component {
     this.process = this.process.bind(this);
     this.pack = this.pack.bind(this);
     this.sell = this.sell.bind(this);
+    this.buy = this.buy.bind(this);
+    this.ship = this.ship.bind(this);
+    this.receive = this.receive.bind(this);
+    this.purchase = this.purchase.bind(this);
     this.register = this.register.bind(this);
     this.fetch1 = this.fetch1.bind(this);
     this.fetch2 = this.fetch2.bind(this);
@@ -153,18 +157,36 @@ class App extends Component {
     console.log(response)
   }
 
-/*  ********************** runExample = async () => {
-    const { accounts, contract } = this.state;
+  buy = async () => {
+    const { accounts, contract, upc, productPrice } = this.state;
+    if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
+    console.log(productPrice)
+    let response =  await contract.methods.buyItem(upc).send({from: accounts[0]});
+    console.log(response)
+  }
 
-    // Stores a given value, 5 by default.
-    //await contract.methods.set(5).send({ from: accounts[0] });
+  ship = async () => {
+    const { accounts, contract, upc, productPrice } = this.state;
+    if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
+    console.log(productPrice)
+    let response =  await contract.methods.shipItem(upc).send({from: accounts[0]});
+    console.log(response)
+  }
+  receive = async () => {
+    const { accounts, contract, upc, productPrice } = this.state;
+    if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
+    console.log(productPrice)
+    let response =  await contract.methods.receiveItem(upc).send({from: accounts[0]});
+    console.log(response)
+  }
+  purchase = async () => {
+    const { accounts, contract, upc, productPrice } = this.state;
+    if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
+    console.log(productPrice)
+    let response =  await contract.methods.purchaseItem(upc).send({from: accounts[0]});
+    console.log(response)
+  }
 
-    // Get the value from the contract to prove it worked.
-    const response = await contract.methods.get().call();
-
-    // Update state with the result.
-    this.setState({ storageValue: response });
-  };*/
 
   render() {
     if (!this.state.web3) {
@@ -250,23 +272,27 @@ class App extends Component {
                   <input style={{display: "inline", marginRight: "10px"}} type="number" id="productPrice" name="productPrice" onChange={this.onInputchange} />
                   <button className="btn-forsale" id="button" type="button" data-id="4" onClick={this.sell}>ForSale</button>
                 </p>
-                
               </form>
             </div>
             {/* ************************************************************************************/}
             <div className="form-group1">
               <div>
                 <h2>Distributor</h2>
-                  <button className="btn-buy" id="button" type="button" data-id="5">Buy</button>
-                  <button className="btn-ship" id="button" type="button" data-id="6">Ship</button>
+                <form>
+                <p><span>Product price: </span>{this.state.productPrice}</p>
+                  <label htmlFor="buyProduct">Buy Product: </label>
+                  <input style={{display: "inline", marginRight: "10px"}} type="number" id="buyProduct" name="buyProduct" onChange={this.onInputchange} />
+                  <button className="btn-buy" id="button" type="button" data-id="5" onClick={this.buy}>Buy</button>
+                  <button className="btn-ship" id="button" type="button" data-id="6" onClick={this.ship}>Ship</button>
+                  </form>
               </div>
               <div>
                 <h2>Retailer</h2>
-                <button className="btn-receive" id="button" type="button" data-id="7">Receive</button>
+                <button className="btn-receive" id="button" type="button" data-id="7" onClick={this.receive}>Receive</button>
               </div>
               <div>
                 <h2>Cosumer</h2>
-                <button className="btn-purchase" id="button" type="button" data-id="8">Purchase</button>
+                <button className="btn-purchase" id="button" type="button" data-id="8" onClick={this.purchase}>Purchase</button>
               </div>
                 
                
