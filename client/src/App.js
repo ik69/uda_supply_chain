@@ -31,7 +31,8 @@ class App extends Component {
                     distributorID: "",
                     retailerID: "",
                     consumerID: "",
-                    msg:"uzenet"
+                    buyProduct: "",
+                    msg:""
                   };
 
     this.onInputchange = this.onInputchange.bind(this);
@@ -85,10 +86,7 @@ class App extends Component {
       originFarmInformation,
       originFarmLatitude,
       originFarmLongitude,
-      productNotes,
-      distributorID,
-      retailerID,
-      consumerID ).send({from: accounts[0]});
+      productNotes, ).send({from: accounts[0]});
     console.log(bb);
   }
 
@@ -112,15 +110,16 @@ class App extends Component {
   }
 
   fetch2 = async () => {
-    const { accounts, contract, upc} = this.state;
+    const { contract, upc} = this.state;
     if(!upc) {this.setState({msg: "UPC2 is  null"}); return;}
+    let enumArray = [ "Harvested", "Processed", "Packed", "ForSale", "Sold", "Shipped", "Received", "Purchased" ];
    let response =  await contract.methods.fetchItemBufferTwo(upc).call();
    console.log(response)
    this.setState({ 
     productID:response.productID,
     productNotes: response.productNotes,
     productPrice: response.productPrice,
-    itemState: response.itemState,
+    itemState: enumArray[parseInt(response.itemState)],
     distributorID: response.distributorID,
     retailerID: response.retailerID,
     consumerID: response[8] 
@@ -137,32 +136,38 @@ class App extends Component {
     const { accounts, contract, upc } = this.state;
     let response =  await contract.methods.harvestItem(upc).send({from: accounts[0]});
     console.log(response)
+
   }
 
   process = async () => {
     const { accounts, contract, upc } = this.state;
     let response =  await contract.methods.processItem(upc).send({from: accounts[0]});
     console.log(response)
+    this.fetch2();
   }
   pack = async () => {
     const { accounts, contract, upc } = this.state;
     let response =  await contract.methods.packItem(upc).send({from: accounts[0]});
-    console.log(response)
+    console.log(response);
+    this.fetch2();
   }
   sell = async () => {
     const { accounts, contract, upc, productPrice } = this.state;
     if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
     console.log(productPrice)
     let response =  await contract.methods.sellItem(upc, parseInt(productPrice)).send({from: accounts[0]});
-    console.log(response)
+    console.log(response);
+    this.fetch2();
   }
 
   buy = async () => {
-    const { accounts, contract, upc, productPrice } = this.state;
-    if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
+    const { accounts, contract, upc, productPrice, buyProduct } = this.state;
+    if(!upc || parseInt(productPrice) < 1 || parseInt(buyProduct) < parseInt(productPrice)) {
+      this.setState({msg: "UPC2 is  null or not enough Money"}); return;}
     console.log(productPrice)
-    let response =  await contract.methods.buyItem(upc).send({from: accounts[0]});
+    let response =  await contract.methods.buyItem(upc).send({from: accounts[0], value: buyProduct});
     console.log(response)
+    this.fetch2();
   }
 
   ship = async () => {
@@ -170,14 +175,16 @@ class App extends Component {
     if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
     console.log(productPrice)
     let response =  await contract.methods.shipItem(upc).send({from: accounts[0]});
-    console.log(response)
+    console.log(response);
+    this.fetch2();
   }
   receive = async () => {
     const { accounts, contract, upc, productPrice } = this.state;
     if(!upc || parseInt(productPrice) < 1) {this.setState({msg: "UPC2 is  null"}); return;}
     console.log(productPrice)
     let response =  await contract.methods.receiveItem(upc).send({from: accounts[0]});
-    console.log(response)
+    console.log(response);
+    this.fetch2();
   }
   purchase = async () => {
     const { accounts, contract, upc, productPrice } = this.state;
@@ -185,6 +192,7 @@ class App extends Component {
     console.log(productPrice)
     let response =  await contract.methods.purchaseItem(upc).send({from: accounts[0]});
     console.log(response)
+    this.fetch2();
   }
 
 
@@ -198,7 +206,7 @@ class App extends Component {
           <h1>Fair Trade Coffee</h1>
           <p>Prove the authenticity of coffee using the Ethereum blockchain.</p>
           <div className="columnDiv">
-            <div style={{textAlign: "center", fontSize: "25px",color: "blue", width: "30%"}}>{this.state.msg}</div>
+            <div style={{textAlign: "center", fontSize: "25px",color: "red", width: "30%"}}>{this.state.msg}</div>
             <div>
             {this.actors.owner} (0)   || 0xbD460DAF090f35FDB28b673cE3101FF17e2351B4 (1) || 0x7165df4Ee0285d0C509FF0474A38AA19aC9FD817 (2) || 
           0x68E2CD52ecE1b4d40d57481AE40F491deA7367f7 (3) || 0xa8B0b61134B24D9766053dd13Fd34016BA697CD6 (4)
@@ -224,7 +232,7 @@ class App extends Component {
                 <input value="200" style={{display: "inline"}} type="text" id="originFarmLongitude" name="originFarmLongitude" onChange={this.onInputchange}/><br />
                 <label htmlFor="productNotes">Product Notes: </label>
                 <input value="Notes" style={{display: "inline"}} type="text" id="productNotes" name="productNotes" onChange={this.onInputchange}/><br />
-                <label htmlFor="productPrice">Product Price: </label>
+                {/*<label htmlFor="productPrice">Product Price: </label>
                 <input style={{display: "inline"}} type="number" id="productPrice" name="productPrice" onChange={this.onInputchange} /><br />
                 <label htmlFor="itemState">Product State: </label>
                 <input value="State" style={{display: "inline"}} type="text" id="itemState" name="itemState" onChange={this.onInputchange} disabled/><br />
@@ -233,7 +241,7 @@ class App extends Component {
                 <label htmlFor="retailerID">RetailerID:</label>
                 <input  type="text" id="retailerID" name="retailerID" onChange={this.onInputchange}/>
                 <label htmlFor="consumerID">Consumer ID:</label>
-                <input  type="text" id="consumerID" name="consumerID" onChange={this.onInputchange}/>
+                <input  type="text" id="consumerID" name="consumerID" onChange={this.onInputchange}/>*/}
                 <button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.register}>Register & Harvest</button>
               </form>
         </div>
@@ -247,8 +255,8 @@ class App extends Component {
                   <button className="btn-fetchTwo" id="btnfetch2" type="button" data-id="10" onClick={this.fetch2}>Fetch Data 2</button>
                 </div>
                 
-                <p> <span>SKU:</span> {this.state.sku}</p>
-                <p><span>Current Owner ID:</span> {this.state.ownerID}</p>
+                <p> <span>SKU:</span> {this.state.sku} <span> Item State: </span> {this.state.itemState}</p>
+                <p><span>Current Owner ID:</span> {this.state.ownerID} </p>
                 <p><span>Distributor ID:</span> {this.state.distributorID}</p>
                 <p><span>Retailer ID:</span> {this.state.retailerID}</p>
                 <p><span>Consumer ID:</span> {this.state.consumerID}</p>
