@@ -58,6 +58,14 @@ contract('SupplyChain', function(accounts) {
         let _distributorID = accounts[2];
         let _retailerID = accounts[3];
         let _consumerID = accounts[4];
+        // Declare and Initialize a variable for event
+        var eventEmitted = false
+                
+        // Watch the emitted event Harvested()
+        var event = supplyChain.Harvested(null, (error, event)=>{
+            eventEmitted = true;
+        });
+
         await supplyChain.register( 
             _originFarmerID, 
             _originFarmName,  
