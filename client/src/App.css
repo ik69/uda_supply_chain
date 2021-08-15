@@ -17,9 +17,7 @@
   color: white;
 }
 
-.App-link {
-  color: #09d3ac;
-}
+.App-link { color: #09d3ac;}
 .container {display: flex; flex-direction: column; }
 #ftc-harvest {display: flex; flex-direction: row;  }
 .columnDiv {display: flex; flex-direction: row;  }
