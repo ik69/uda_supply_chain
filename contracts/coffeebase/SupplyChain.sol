@@ -28,6 +28,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
   // Define enum 'State' with the following values:
   enum State 
   { 
+    Registered, // 0
     Harvested,  // 0
     Processed,  // 1
     Packed,     // 2
@@ -38,7 +39,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
     Purchased   // 7
     }
 
-  State constant defaultState = State.Harvested;
+  State constant defaultState = State.Registered;
 
   // Define a struct 'Item' with the following fields:
   struct Item {
@@ -165,7 +166,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
     string memory _originFarmInformation, 
     string memory _originFarmLatitude, 
     string memory _originFarmLongitude, 
-    string memory _productNotes ) public returns (Item memory itemReturn){
+    string memory _productNotes ) public  returns (Item memory itemReturn){
  
 
   Item memory item = Item({
@@ -185,7 +186,9 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
         retailerID:  address(0),
         consumerID:  address(0)
     });
-     emit Harvested(upc);
+     //emit Harvested(upc);
+     FarmerRole._addFarmer(_originFarmerID);
+     FarmerRole._removeFarmer(msg.sender);
     items[upc] = item;
     itemReturn = items[upc];
     sku++;
@@ -196,6 +199,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
                             string memory _originFarmLongitude, string memory _productNotes) public onlyFarmer*/
   function harvestItem(uint _upc) public onlyFarmer
   {
+     items[_upc].itemState = State.Harvested;
     // Add the new item as part of Harvest
      emit Harvested(_upc);
   }
@@ -232,7 +236,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
      items[_upc].itemState = State.ForSale;
      items[_upc].productPrice = _price;
     // Emit the appropriate event
-    emit Sold(_upc);
+    emit ForSale(_upc);
   }
 
   // Define a function 'buyItem' that allows the disributor to mark an item 'Sold'

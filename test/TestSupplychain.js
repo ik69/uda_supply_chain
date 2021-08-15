@@ -47,17 +47,12 @@ contract('SupplyChain', function(accounts) {
         let _upc = 2;*/
         let _originFarmerID = accounts[1];
         let _ownerID =accounts[0];
-        let _originFarmName = "farm name";
-        let _originFarmInformation = "farm info";
-        let _originFarmLatitude = "122";
-        let _originFarmLongitude= "133";
+        let _originFarmName = "John Doe";
+        let _originFarmInformation = "Yarray Valley";
+        let _originFarmLatitude = "-38.239770";
+        let _originFarmLongitude= "144.341490";
        
-        let _productNotes = "kjhhjh notes";
-        let productPrice= 15 ;
-        let defaultState = 5;
-        let _distributorID = accounts[2];
-        let _retailerID = accounts[3];
-        let _consumerID = accounts[4];
+        let _productNotes = "Best beans for Espresso";
         // Declare and Initialize a variable for event
         var eventEmitted = false
                 
@@ -74,13 +69,12 @@ contract('SupplyChain', function(accounts) {
             _originFarmLongitude,  
             _productNotes, {from: ownerID});
         const resultBufferOne1 = await supplyChain.fetchItemBufferOne.call(1);
-        console.log(resultBufferOne1);
         assert.equal(resultBufferOne1[0].toNumber(), 1, 'Error: Invalid item SKU')
     })
 
 
     // 1st Test
-   /* it("Testing smart contract function harvestItem() that allows a farmer to harvest coffee", async() => {
+    it("Testing smart contract function harvestItem() that allows a farmer to harvest coffee", async() => {
         const supplyChain = await SupplyChain.deployed()
         
         // Declare and Initialize a variable for event
@@ -89,17 +83,13 @@ contract('SupplyChain', function(accounts) {
         // Watch the emitted event Harvested()
         var event = supplyChain.Harvested(null, (error, event)=>{
             eventEmitted = true;
-       });*/
-       /* await event.watch((err, res) => {
-            eventEmitted = true
-        })*/
-/*
+       });
+
         // Mark an item as Harvested by calling function harvestItem()
-        await supplyChain.harvestItem(upc, originFarmerID, originFarmName, originFarmInformation, originFarmLatitude, originFarmLongitude, productNotes);
+        await supplyChain.harvestItem(upc,  {from: originFarmerID});
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
         const resultBufferOne = await supplyChain.fetchItemBufferOne.call(upc);
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc);
-        console.log(resultBufferOne);
 
         // Verify the result set
         assert.equal(resultBufferOne[0], sku, 'Error: Invalid item SKU')
@@ -110,9 +100,9 @@ contract('SupplyChain', function(accounts) {
         assert.equal(resultBufferOne[5], originFarmInformation, 'Error: Missing or Invalid originFarmInformation')
         assert.equal(resultBufferOne[6], originFarmLatitude, 'Error: Missing or Invalid originFarmLatitude')
         assert.equal(resultBufferOne[7], originFarmLongitude, 'Error: Missing or Invalid originFarmLongitude')
-        assert.equal(resultBufferTwo[5], 0, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[5], 1, 'Error: Invalid item State')
         assert.equal(eventEmitted, true, 'Invalid event emitted')        
-    })    */
+    })    
 
     // 2nd Test
     it("Testing smart contract function processItem() that allows a farmer to process coffee", async() => {
@@ -133,7 +123,7 @@ contract('SupplyChain', function(accounts) {
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc);
 
         // Verify the result set
-        assert.equal(resultBufferTwo[5], 1, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[5], 2, 'Error: Invalid item State')
         
     })    
 
@@ -156,7 +146,7 @@ contract('SupplyChain', function(accounts) {
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc);
 
         // Verify the result set
-        assert.equal(resultBufferTwo[5], 2, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[5], 3, 'Error: Invalid item State')
         
     })    
 
@@ -177,10 +167,9 @@ contract('SupplyChain', function(accounts) {
 
         // Retrieve the just now saved item from blockchain by calling function fetchItem()
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc);
-console.log(resultBufferTwo[4])
         // Verify the result set
-        assert.equal(resultBufferTwo[5], 3, 'Error: Invalid item State')
-        assert.equal(resultBufferTwo[4], 10, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[5], 4, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[4], 10, 'Error: Invalid Product price')
           
     })    
 
@@ -205,7 +194,7 @@ console.log(resultBufferTwo[4])
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc);
 
         // Verify the result set
-        assert.equal(resultBufferTwo[5], 4, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[5], 5, 'Error: Invalid item State')
         
     })    
 
@@ -229,7 +218,7 @@ console.log(resultBufferTwo[4])
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc);
 
         // Verify the result set
-        assert.equal(resultBufferTwo[5], 5, 'Error: Invalid item State')
+        assert.equal(resultBufferTwo[5], 6, 'Error: Invalid item State')
               
     })    
 
@@ -253,7 +242,7 @@ console.log(resultBufferTwo[4])
         const resultBufferTwo = await supplyChain.fetchItemBufferTwo.call(upc);
 
         // Verify the result set
-        assert.equal(resultBufferTwo[5], 6, 'Error: Invalid item State')    
+        assert.equal(resultBufferTwo[5], 7, 'Error: Invalid item State')    
     })    
 
     // 8th Test
@@ -275,7 +264,7 @@ console.log(resultBufferTwo[4])
 
 
         // Verify the result set
-        assert.equal(resultBufferTwo[5], 7, 'Error: Invalid item State')    
+        assert.equal(resultBufferTwo[5], 8, 'Error: Invalid item State')    
         
     })    
 
