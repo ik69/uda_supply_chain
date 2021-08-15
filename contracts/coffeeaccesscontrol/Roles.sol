@@ -6,7 +6,7 @@ pragma solidity >=0.8.6;
  * @dev Library for managing addresses assigned to a Role.
  */
 library Roles {
-  struct Role {
+  struct  Role {
     mapping (address => bool) bearer;
   }
 

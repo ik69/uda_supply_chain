@@ -57,6 +57,7 @@ class App extends Component {
       const instance = new web3.eth.Contract( SupplyChainContract.abi, deployedNetwork && deployedNetwork.address, );
       // const instance = new web3.eth.Contract( SimpleStorageContract.abi, deployedNetwork && deployedNetwork.address, );
       // Set web3, accounts, and contract to the state, and then proceed with an example of interacting with the contract's methods.
+      console.log(accounts);
       this.setState({ web3, accounts, contract: instance });
     } catch (error) {
       // Catch any errors for any of the above operations.
@@ -264,12 +265,10 @@ class App extends Component {
                 <p><span>Farm Latitude:</span> {this.state.originFarmLatitude}</p>
                 <p><span>Farm Longitude:</span> {this.state.originFarmLongitude}</p>
                 <p><span>Product Notes:</span> {this.state.productNotes}</p>
-                 {/*<button className="btn-harvest" id="button" type="button" data-id="1" onClick={this.harvest}>Harvest</button> */}
                 <button className="btn-process" id="button" type="button" data-id="1" onClick={this.harvest}>Harvest</button>
                 <button className="btn-process" id="button" type="button" data-id="2" onClick={this.process}>Process</button>
                 <button className="btn-pack" id="button" type="button" data-id="3" onClick={this.pack}>Pack</button>
                 <p>
-                  {/*<span>Product Price:</span> {this.state.productPrice}*/}
                   <label htmlFor="productPrice">Product Price: </label>
                   <input style={{display: "inline", marginRight: "10px"}} type="number" id="productPrice" name="productPrice" onChange={this.onInputchange} />
                   <button className="btn-forsale" id="button" type="button" data-id="4" onClick={this.sell}>ForSale</button>
@@ -298,8 +297,6 @@ class App extends Component {
               </div>
             </div>
           </div>
-        
-         
         <div>
             <h2>Transaction History<span id="ftc-history"></span></h2>
             <ul id="ftc-events">
@@ -313,5 +310,4 @@ class App extends Component {
     );
   }
 }
-
 export default App;

@@ -188,7 +188,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
     });
      //emit Harvested(upc);
      FarmerRole._addFarmer(_originFarmerID);
-     FarmerRole._removeFarmer(msg.sender);
+     //FarmerRole._removeFarmer(msg.sender);
     items[upc] = item;
     itemReturn = items[upc];
     sku++;
@@ -273,7 +273,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
   // Use the above modifiers to check if the item is shipped
    // Call modifier to check if upc has passed previous supply chain stage
     // Access Control List enforced by calling Smart Contract / DApp
-  function receiveItem(uint _upc) public shipped(_upc) onlyRetailer
+  function receiveItem(uint _upc) public shipped(_upc) 
     {
     // Update the appropriate fields - ownerID, retailerID, itemState
       items[_upc].ownerID = msg.sender;
@@ -289,7 +289,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
   // Use the above modifiers to check if the item is received
   // Call modifier to check if upc has passed previous supply chain stage
     // Access Control List enforced by calling Smart Contract / DApp
-  function purchaseItem(uint _upc) public  received(_upc) onlyConsumer
+  function purchaseItem(uint _upc) public  received(_upc) 
     {
     // Update the appropriate fields - ownerID, consumerID, itemState
         items[_upc].ownerID = msg.sender;

@@ -185,8 +185,6 @@ contract('SupplyChain', function(accounts) {
        var event = supplyChain.Sold(null, (error, event)=>{
         eventEmitted = true;
    });
-        
-
         // Mark an item as Sold by calling function buyItem()
         await supplyChain.buyItem(upc, {from: accounts[2], value: 10});
 
@@ -209,7 +207,6 @@ contract('SupplyChain', function(accounts) {
         var event = supplyChain.Shipped(null, (error, event)=>{
             eventEmitted = true;
        });
-        
 
         // Mark an item as shipped by calling function shipItem()
         await supplyChain.shipItem(upc, {from: accounts[2]});
