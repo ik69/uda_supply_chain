@@ -186,9 +186,7 @@ contract SupplyChain is ConsumerRole, FarmerRole, DistributorRole, RetailerRole 
         retailerID:  address(0),
         consumerID:  address(0)
     });
-     //emit Harvested(upc);
      FarmerRole._addFarmer(_originFarmerID);
-     //FarmerRole._removeFarmer(msg.sender);
     items[upc] = item;
     itemReturn = items[upc];
     sku++;
