@@ -1,7 +1,7 @@
 const path = require("path");
  const HDWalletProvider = require("@truffle/hdwallet-provider");
- const infuraKey = "8c79b444b7634925965e1de525e42758";
- const mnemonic = "inhale position proud genius sound leaf mansion secret alert legal major spawn";
+ const infuraKey = "";
+ const mnemonic = "";
 
 module.exports = {
   // See <http://truffleframework.com/docs/advanced/configuration>
@@ -16,7 +16,7 @@ module.exports = {
   networks: { 
     develop: { port: 9545 },
     rinkeby: {
-      provider: () => new HDWalletProvider(mnemonic, `https://rinkeby.infura.io/v3/82ae06c599484855946e1fa67bc2bf5d`),
+      provider: () => new HDWalletProvider(mnemonic, "https://rinkeby.infura.io/v3/"+ infuraKey),
       network_id: 4,
       gas: 4500000,
       //gasPrice: 10000000000,
