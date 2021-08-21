@@ -2,10 +2,23 @@
 
 This repository containts an Ethereum DApp that demonstrates a Supply Chain flow between a Farmer, Distributor, Retailer and Consumer. The user story is similar to any commonly used supply chain process. A Farmer can register and add items to the inventory system stored in the blockchain. A registered farmer can put a harvested and packed item for sale. A Distributor can purchase such items from the inventory system and ship to Retailer. Additionally a Distributor can mark an item as Shipped, and similarly a Retailer can mark an item as Received. Then Consumer can purchase the item.
 
-UML  
+UML diagrams:  
+
 Activity Diagram
 
 ![truffle test](activity.png)
+
+Sequence Diagram:
+
+![truffle test](sequence.png)
+
+State Diagram:
+
+![truffle test](state1.png)
+
+Class Diagram (Data Model):
+
+![truffle test](class.png)
 
 The DApp User Interface when running should look like...
 
@@ -22,10 +35,13 @@ These instructions will get you a copy of the project up and running on your loc
 
 This project was created using:  
 - Truffle version: v5.4.3 (core: 5.4.3).  
-- Truffle react box
 - Solidity - 0.8.6 (solc-js).  
 - Web3.js v1.5.0  
 - Node v14.15.3 
+
+Libraries  
+Roles library was used to make easier to manage AccessControl.
+
 
 ### Prerequisites
 
@@ -89,12 +105,10 @@ npm run start
 
 * [Ethereum](https://www.ethereum.org/) - Ethereum is a decentralized platform that runs smart contracts
 
-* [Truffle Framework](http://truffleframework.com/) - Truffle is the most popular development framework for Ethereum with a mission to make your life a whole lot easier.
+* [Truffle Framework](http://truffleframework.com/) with Truffle react box
+- Truffle is the most popular development framework for Ethereum with a mission to make your life a whole lot easier.
 
 
-## Authors
-
-See also the list of [contributors](https://github.com/your/project/contributors.md) who participated in this project.
 
 ## Acknowledgments
 
@@ -103,4 +117,4 @@ See also the list of [contributors](https://github.com/your/project/contributors
 * Truffle
 
 - SupplyChain Address on the Rinkeby Network  - 0x3B6deaB889281445Ed7CE24C06459c824d01a04F
- - transaction hash:    0x1f3e641db1e8fe26de758504c0dccb3d8041aa862694eef43f82ebd8b5c5dc3c
+- transaction hash:    0x1f3e641db1e8fe26de758504c0dccb3d8041aa862694eef43f82ebd8b5c5dc3c
