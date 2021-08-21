@@ -10,7 +10,7 @@ The DApp User Interface when running should look like...
 
 ![truffle test](images/purchased.png)
 
-[[images/purchased.png]]
+[images/purchased.png]
 
 
 ## Getting Started
